@@ -3,7 +3,9 @@ export type ColorChannel = number;
 export type BitDepth = number;
 
 export type ColorData = {
+  // list of color channel values
   rgb: ColorChannel[];
+  // bit color depth (15 means 32 colors per channel; 24 means 256)
   depth: BitDepth;
 };
 
@@ -13,8 +15,6 @@ export type ColorData = {
  */
 export class Color {
   private _colorData: ColorData;
-  // bit color depth (15 means 32 colors per channel; 24 means 256)
-  //depth: number;
 
   // might change this to take a single ColorData object, but this should be ok for now
   constructor(
@@ -34,13 +34,10 @@ export class Color {
   /** @returns comma-separated rgb values */
   rgbString(): string {
     let retVal = "";
-    //return this.r + ',' + this.g + ',' + this.b;
-    //for (let channel of this.rgb.channels) {
     for (let i = 0; i < this.rgb.length; i++) {
       retVal += this.channelToNBitDepth(this.rgb[i], this.depth / 3);
       if (i < this.rgb.length - 1) retVal += ",";
     }
-    //retVal.substring(0, retVal.length - 1);
     return retVal;
   }
 
@@ -116,7 +113,6 @@ export class Color {
       this.printData();
       console.log("conversion result:", retVal);
     }
-
     return retVal;
   }
 
@@ -212,15 +208,6 @@ export class Color {
     // eg. 8-bit channels are 2^3 times as big as 5-bit channels
     const multiplier = Math.pow(2, newDepth - oldDepth);
     return Math.floor(channelValue * multiplier);
-  }
-
-  /**
-   * @param channelValue value of the single r, g, or b channel
-   * @returns channel in hex format (two characters long)
-   */
-  private channelToHex(channelValue: BitDepth, depth: BitDepth): string {
-    // convert it to a string in hexadecimal format
-    return this.channelToNBitDepth(channelValue, depth).toString(16);
   }
 
   private printData() {
