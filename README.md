@@ -1,24 +1,3 @@
 # zzx-color-picker
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Rebuilding my sprite color palette customizer/code generator site from the ground up to practice Vue/TypeScript
