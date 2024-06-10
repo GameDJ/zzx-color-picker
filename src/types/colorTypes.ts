@@ -6,7 +6,7 @@ export type ColorData = {
   // list of color channel values
   rgb: ColorChannel[];
   // bit color depth (15 means 32 colors per channel; 24 means 256)
-  depth: BitDepth;
+  depth: BitDepth | 24;
 };
 
 /**
