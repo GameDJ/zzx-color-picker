@@ -1,12 +1,18 @@
+import { ColorPalette, Palette } from "./spriteTypes";
+
 /** just type aliases; might add validation logic later if I can figure out how */
 export type ColorChannel = number;
 export type BitDepth = number;
+
+const DEPTH_DEFAULT = 24 as BitDepth;
+
+export type RGB = ColorChannel[];
 
 export type ColorData = {
   // list of color channel values
   rgb: ColorChannel[];
   // bit color depth (15 means 32 colors per channel; 24 means 256)
-  depth: BitDepth | 24;
+  depth: BitDepth;
 };
 
 /**
@@ -21,22 +27,24 @@ export class Color {
     r: ColorChannel,
     g: ColorChannel,
     b: ColorChannel,
-    depth: ColorChannel
+    depth?: BitDepth
   ) {
     this._colorData = {
       rgb: [r, g, b],
-      depth: depth,
+      depth: depth ? depth : DEPTH_DEFAULT,
     } as ColorData;
     // Validation just prints an error for now (which is why this is after the assignment)
-    this.validateData();
+    Color.validateData(this);
   }
 
+  // Static methods
+
   /** @returns comma-separated rgb values */
-  rgbString(): string {
+  static rgbString(color: Color): string {
     let retVal = "";
-    for (let i = 0; i < this.rgb.length; i++) {
-      retVal += this.channelToNBitDepth(this.rgb[i], this.depth / 3);
-      if (i < this.rgb.length - 1) retVal += ",";
+    for (let i = 0; i < color.rgb.length; i++) {
+      retVal += Color.channelToNBitDepth(color.rgb[i], color.depth / 3);
+      if (i < color.rgb.length - 1) retVal += ",";
     }
     return retVal;
   }
@@ -46,17 +54,21 @@ export class Color {
    * @param includeHash defaults to false
    * @param toUpperCase defaults to true
    */
-  hexString(includeHash = false, toUpperCase = true): string {
+  static hexString(
+    color: Color,
+    includeHash = false,
+    toUpperCase = true
+  ): string {
     let retVal = "";
     if (includeHash) retVal += "#";
 
     // Convert each channel to hex and append it to the return string
     let nextChannelHex = "";
-    for (const channel of this.rgb) {
+    for (const channel of color.rgb) {
       // convert it to a string in hexadecimal format
-      nextChannelHex = this.channelToNBitDepth(
+      nextChannelHex = Color.channelToNBitDepth(
         channel,
-        this.depth / 3
+        color.depth / 3
       ).toString(16);
 
       // Add trailing zeros if necessary
@@ -74,18 +86,18 @@ export class Color {
    * @returns the color in 15-bit gba format
    * @param toUpperCase defaults to true
    */
-  gbaString(toUpperCase = true): string {
+  static gbaString(color: Color, toUpperCase = true): string {
     let retVal = "";
     let nextChannel = "";
     for (let i = 2; i >= 0; i--) {
       // convert its 5-bit-depth-channel (if it wasn't already) value into a string in binary format
-      nextChannel = this.channelToNBitDepth(
-        this.rgb[i],
-        this.depth / 3,
+      nextChannel = Color.channelToNBitDepth(
+        color.rgb[i],
+        color.depth / 3,
         5
       ).toString(2);
 
-      //console.log("channel conversion (from, to)", this.rgb[i], nextChannel);
+      //console.log("channel conversion (from, to)", color.rgb[i], nextChannel);
 
       // Add trailing zeros if necessary
       while (nextChannel.length < 5) {
@@ -95,7 +107,7 @@ export class Color {
       // Validate
       if (nextChannel.length > 5) {
         console.log("Error in gba format channel calculation!");
-        this.printData();
+        Color.printData(color);
         console.log("converted channel:", i, nextChannel);
       }
       retVal += nextChannel;
@@ -110,10 +122,22 @@ export class Color {
     // validate
     if (retVal.length != 4) {
       console.log("Error in gba format final calculation!");
-      this.printData();
+      Color.printData(color);
       console.log("conversion result:", retVal);
     }
     return retVal;
+  }
+
+  static convertPaletteToColorPalette(palette: Palette) {
+    const newColorPalette = [] as ColorPalette;
+    for (const curRGB of palette.rgbList) {
+      console.log("depth", palette.depth)
+      const newColor = new Color(curRGB[0], curRGB[1], curRGB[2], palette.depth | DEPTH_DEFAULT);
+      console.log("making new color from ", curRGB)
+      console.log("to", newColor)
+      newColorPalette.push(newColor);
+    }
+    return newColorPalette;
   }
 
   // Getters and Setters
@@ -123,11 +147,18 @@ export class Color {
   }
   set colorData(newColorData: ColorData) {
     // For now it simply doesn't set the new data if validation fails
-    if (this.validateData(newColorData)) this._colorData = newColorData;
+    if (Color.validateData(this, newColorData)) this._colorData = newColorData;
   }
 
   get rgb(): ColorChannel[] {
     return this.colorData.rgb;
+  }
+  set rgb(newRGB: ColorChannel[]) {
+    if (newRGB.length === 3) {
+      this.colorData.rgb = newRGB;
+    } else {
+      console.log("Error: bad rgb assignment! (old, new)", this.rgb, newRGB);
+    }
   }
   get depth(): BitDepth {
     return this.colorData.depth;
@@ -154,11 +185,14 @@ export class Color {
 
   // Private methods
 
-  private validateData(newColorData: ColorData | null = null): boolean {
+  private static validateData(
+    color: Color,
+    newColorData: ColorData | null = null
+  ): boolean {
     // If no argument is provided, it validates the object's existing data
     let dataToValidate = null;
     if (newColorData) dataToValidate = newColorData;
-    else dataToValidate = this.colorData;
+    else dataToValidate = color.colorData;
 
     if (dataToValidate.rgb.length != 3) {
       console.log(
@@ -200,7 +234,7 @@ export class Color {
    * @param newDepth the channel's desired bit depth; default is 8
    * @returns channel's n-bit equivalent, eg. (16, 5) converts 5-bit 16 to 8-bit 128
    */
-  private channelToNBitDepth(
+  private static channelToNBitDepth(
     channelValue: BitDepth,
     oldDepth: BitDepth,
     newDepth: BitDepth = 8
@@ -210,8 +244,8 @@ export class Color {
     return Math.floor(channelValue * multiplier);
   }
 
-  private printData() {
-    console.log("rgb:", this.colorData);
-    console.log("depth:", this.depth);
+  private static printData(color: Color) {
+    console.log("rgb:", color.colorData);
+    console.log("depth:", color.depth);
   }
 }

@@ -3,9 +3,9 @@
     <p>Hello World!</p>
     <p>raw: {{ color.rgb }}</p>
     <p>r: {{ color.r }} g: {{ color.g }} b: {{ color.b }}</p>
-    <p>rgb: {{ color.rgbString() }}</p>
-    <p>hex: {{ color.hexString() }}</p>
-    <p>gba: {{ color.gbaString() }}</p>
+    <p>rgb: {{ Color.rgbString(color) }}</p>
+    <p>hex: {{ Color.hexString(color) }}</p>
+    <p>gba: {{ Color.gbaString(color) }}</p>
     <form @submit.prevent="setColor()">
       <input type="number" name="r" placeholder="red" ref="r" />
       <br />
@@ -20,11 +20,11 @@
     </form>
     <div
       class="color-sample"
-      :style="{ 'background-color': 'rgb(' + color.rgbString() + ')' }"
+      :style="{ 'background-color': 'rgb(' + Color.rgbString(color) + ')' }"
     ></div>
     <div
       class="color-sample"
-      :style="{ 'background-color': color.hexString(true) }"
+      :style="{ 'background-color': Color.hexString(color, true) }"
     ></div>
   </div>
 </template>

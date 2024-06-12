@@ -1,17 +1,26 @@
-/* eslint-disable prettier/prettier */
-import { ColorData } from "./colorTypes";
+import { ColorData, Color, RGB, BitDepth } from "./colorTypes";
 
-export type Palette = ColorData[];
+export interface Palette {
+    rgbList: RGB[],
+    depth: BitDepth,
+};
+export type ColorPalette = Color[];
 export type Address = string;
-export type Addresses = Address[];
-export type PaletteIndex = number;
+export interface Addresses {
+    addr: Address[],
+    version: string,
+}
+export type PaletteIndex = number | null;
 export type SpritePixels = PaletteIndex[][];
 
 export interface Sprite {
-    width: number,
-    height: number,
+    // width: number,
+    // height: number,
     scale: number | 20,
     pixels: SpritePixels,
     palette: Palette,
     addresses: Addresses,
-};
+}
+
+// use this regex to find empty commas:
+// (?<![\d\w\]]),
