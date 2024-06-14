@@ -1,6 +1,45 @@
 <template>
 	<div>
-		<table class="sprite-table">
+		<!-- <button @click="changeColor()">Change color</button>
+		<button @click="changeSprite(sprites.zero1)">zero1</button>
+		<button @click="changeSprite(sprites.zero1_dash)">zero1_dash</button>
+		<button @click="changeSprite(sprites.zero234)">zero234</button>
+		<button @click="changeSprite(sprites.zero234_dash)">zero234_dash</button>
+		<button @click="changeSprite(sprites.vent)">Vent</button> -->
+		<div class="tree-container">
+			<div v-for="seriesKey in seriesList.keys()" :key="seriesKey">
+				<h2 class="tree">{{ seriesKey }}</h2>
+				<div
+					v-for="gameKey in seriesList.get(seriesKey).keys()"
+					:key="gameKey"
+					style="margin-left: 100px"
+				>
+					<h3 class="tree">{{ gameKey }}</h3>
+					<div
+						v-for="spriteKey in seriesList
+							.get(seriesKey)
+							.get(gameKey)
+							.keys()"
+						:key="spriteKey"
+						style="margin-left: 100px"
+					>
+						<button
+							@click="
+								changeSprite(
+									seriesList
+										.get(seriesKey)
+										.get(gameKey)
+										.get(spriteKey)
+								)
+							"
+						>
+							{{ spriteKey }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<table class="sprite-table" v-if="loadedSprite">
 			<tr
 				class="pixel-row"
 				v-for="(pixel_row, rowNum) in loadedSpritePixels"
@@ -11,58 +50,107 @@
 					v-for="(pixel, colNum) in pixel_row"
 					:key="colNum"
 					:style="{
-						backgroundColor:
-							pixel
-								? Color.hexString(loadedSpritePalette[pixel-1], true)
-								: '#0000',
+						backgroundColor: pixel
+							? Color.hexString(loadedSpritePalette[pixel], true)
+							: '#0000',
+						visibility: pixel ? 'visible' : 'hidden',
 					}"
+					@click="selectPixel(pixel)"
 				></td>
 			</tr>
 		</table>
-    <button @click="changeColor">Change color</button>
 	</div>
 </template>
 
 <script setup lang="ts">
 import {
-  Sprite,
-  SpritePixels,
-  PaletteIndex,
-  Palette,
-  ColorPalette,
+	Sprite,
+	SpritePixels,
+	PaletteIndex,
+	Palette,
+	ColorPalette,
 } from "@/types/spriteTypes";
 import { Color, RGB } from "@/types/colorTypes";
-import { ref } from "vue";
-import { sprites } from "@/assets/sprites";
+import { ref, toRefs } from "vue";
+// import { sprites } from "@/assets/sprites";
+import { series } from "@/assets/sprites";
 
-const loadedSprite = ref(sprites.zero);
-const loadedSpritePixels = ref(sprites.zero.sprite);
-const loadedSpritePalette = ref(Color.convertPaletteToColorPalette(sprites.zero.palette));
-const loadedSpriteAddresses = ref(sprites.zero.addresses);
+const seriesList = series;
+console.log(seriesList.keys());
 
-console.log(loadedSpritePalette.value[7]);
+const loadedSprite = ref(null);
+function loadSpriteData() {
+	return {
+		loadedSpritePixels: loadedSprite.value.pixels,
+		loadedSpritePalette: Color.convertPaletteToColorPalette(
+			loadedSprite.value.palette
+		),
+		loadedSpriteAddresses: loadedSprite.value.addresses,
+	};
+}
+// const loadedResults = loadSpriteData();
+// const loadedSpritePixels = ref(loadedResults.loadedSpritePixels);
+// const loadedSpritePalette = ref(loadedResults.loadedSpritePalette);
+// const loadedSpriteAddresses = ref(loadedResults.loadedSpriteAddresses);
+const loadedSpritePixels = ref(null);
+const loadedSpritePalette = ref(null);
+const loadedSpriteAddresses = ref(null);
 
-function changeColor() {
-  loadedSpritePalette.value[1].rgb = [255, 0, 255] as RGB;
+// console.log(loadedSpritePalette.value[7]);
+// console.log("mappy", Color.convertPaletteToMap(loadedSprite.value.palette));
+
+function changeColor(pixel: PaletteIndex = 1) {
+	console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
+	loadedSpritePalette.value[pixel].rgb = [255, 0, 255] as RGB;
+	console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
 }
 
-//const filteredPixels = computed((spritePixelsArg: SpritePixels) => spritePixelsArg.filter((pixel)));
+function changeSprite(newSprite: Sprite) {
+	loadedSprite.value = newSprite;
+	const reloadedResults = loadSpriteData();
+	loadedSpritePixels.value = reloadedResults.loadedSpritePixels;
+	loadedSpritePalette.value = reloadedResults.loadedSpritePalette;
+	loadedSpriteAddresses.value = reloadedResults.loadedSpriteAddresses;
+}
+
+function selectPixel(pixel: PaletteIndex) {
+	changeColor(pixel);
+}
 </script>
 
 <style scoped>
 .sprite-table {
-  border-collapse: collapse;
+	border-collapse: collapse;
+	display: block;
+	float: right;
 }
 .pixel-row {
-  margin: 0px;
+	margin: 0px;
 }
 .pixel {
-  display: block;
-  float: left;
-  width: 15px;
-  height: 15px;
-  background-color: green;
-  margin: 0px;
-  padding: 0px;
+	display: block;
+	float: left;
+	width: 15px;
+	height: 15px;
+	/*background-color: green;*/
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer;
+}
+.pixel:hover {
+	box-sizing: border-box;
+	border-style: groove;
+	border-width: 1px;
+}
+h2,
+h3,
+h4 {
+	margin-top: 4px; 
+	margin-bottom: 4px;
+}
+
+.tree-container {
+	display: block;
+	float: left;
 }
 </style>
