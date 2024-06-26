@@ -8,6 +8,8 @@ const DEPTH_DEFAULT = 24 as BitDepth;
 
 export type RGB = ColorChannel[];
 
+const TRANSP_DEFAULT = [128, 128, 128] as RGB;
+
 export type ColorData = {
   // list of color channel values
   rgb: ColorChannel[];
@@ -16,7 +18,7 @@ export type ColorData = {
 };
 
 /**
- * @param rgb three integers from 0 to 31 (5 bit to support gba)
+ * @param rgb three integers from 0 to 255 (for 24 bit which is the default)
  * @param depth bit color depth; generally either 24 for rgb/hex formats or 15 for gba
  */
 export class Color {
@@ -24,13 +26,11 @@ export class Color {
 
   // might change this to take a single ColorData object, but this should be ok for now
   constructor(
-    r: ColorChannel,
-    g: ColorChannel,
-    b: ColorChannel,
+    rgb: RGB,
     depth?: BitDepth
   ) {
     this._colorData = {
-      rgb: [r, g, b],
+      rgb: [rgb[0], rgb[1], rgb[2]] as RGB,
       depth: depth ? depth : DEPTH_DEFAULT,
     } as ColorData;
     // Validation just prints an error for now (which is why this is after the assignment)
@@ -130,14 +130,26 @@ export class Color {
 
   static convertPaletteToColorPalette(palette: Palette) {
     const newColorPalette = [] as ColorPalette;
+    // 0th index will be a filler background color which is ignored
+    newColorPalette.push(new Color(TRANSP_DEFAULT, DEPTH_DEFAULT));
     for (const curRGB of palette.rgbList) {
-      console.log("depth", palette.depth)
-      const newColor = new Color(curRGB[0], curRGB[1], curRGB[2], palette.depth | DEPTH_DEFAULT);
-      console.log("making new color from ", curRGB)
-      console.log("to", newColor)
+      //console.log("depth", palette.depth)
+      const newColor = new Color(curRGB, palette.depth | DEPTH_DEFAULT);
+      //console.log("making new color from ", curRGB)
+      //console.log("to", newColor)
       newColorPalette.push(newColor);
     }
     return newColorPalette;
+  }
+
+  static convertPaletteToMap(palette: Palette) {
+    const paletteMap = new Map();
+    // for (const curRGB of palette.rgbList) {
+    for (let i=0; i<palette.rgbList.length; i++) {
+      const newColor = new Color(palette.rgbList[i], palette.depth | DEPTH_DEFAULT);
+      paletteMap.set(i+1, newColor);
+    }
+    return paletteMap;
   }
 
   // Getters and Setters
