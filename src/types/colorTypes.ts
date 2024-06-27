@@ -1,4 +1,4 @@
-import { ColorPalette, Palette } from "./spriteTypes";
+import { Palette } from "./spriteTypes";
 
 /** just type aliases; might add validation logic later if I can figure out how */
 export type ColorChannel = number;
@@ -128,8 +128,8 @@ export class Color {
     return retVal;
   }
 
-  static convertPaletteToColorPalette(palette: Palette) {
-    const newColorPalette = [] as ColorPalette;
+  static convertPaletteToColorPalette(palette: Palette): Color[] {
+    const newColorPalette = [] as Color[];
     // 0th index will be a filler background color which is ignored
     newColorPalette.push(new Color(TRANSP_DEFAULT, DEPTH_DEFAULT));
     for (const curRGB of palette.rgbList) {

@@ -4,7 +4,7 @@ export interface Palette {
     rgbList: RGB[],
     depth: BitDepth,
 }
-export type ColorPalette = Color[];
+//export type Color[] = Color[];
 export type Address = string;
 export interface Addresses {
     addr: Address[],

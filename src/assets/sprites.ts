@@ -2897,6 +2897,7 @@ zx_sprites.set('zx_attacks', {
     pixels: zx_saber_sprite,
     palette: zx_saber_rgb,
     addresses: zx_saber_first_addresses,
+    scale: 10,
 } as Sprite);
 zx_sprites.set('hx', {
     pixels: hx_sprite,

@@ -51,9 +51,11 @@
 					:key="colNum"
 					:style="{
 						backgroundColor: pixel
-							? Color.hexString(loadedSpritePalette[pixel], true)
+							? Color.hexString(loadedSpritePalette[pixel] as Color, true)
 							: '#0000',
 						visibility: pixel ? 'visible' : 'hidden',
+						width: pixelScale + 'px',
+						height: pixelScale + 'px',
 					}"
 					@click="selectPixel(pixel)"
 				></td>
@@ -68,17 +70,30 @@ import {
 	SpritePixels,
 	PaletteIndex,
 	Palette,
-	ColorPalette,
+	Addresses,
 } from "@/types/spriteTypes";
 import { Color, RGB } from "@/types/colorTypes";
 import { ref, toRefs } from "vue";
 // import { sprites } from "@/assets/sprites";
 import { series } from "@/assets/sprites";
 
+const DEFAULT_SCALE = 15;
+const pixelScale = ref(DEFAULT_SCALE);
+
 const seriesList = series;
 console.log(seriesList.keys());
 
-const loadedSprite = ref(null);
+// Initialize with empty filler values
+const loadedSprite = ref({
+	pixels: [][0] as PaletteIndex[][],
+	palette: {
+		rgbList: [][0],
+		depth: 0,
+	} as Palette,
+	addresses: {
+		addr: [],
+	} as Addresses,
+} as Sprite);
 function loadSpriteData() {
 	return {
 		loadedSpritePixels: loadedSprite.value.pixels,
@@ -92,9 +107,11 @@ function loadSpriteData() {
 // const loadedSpritePixels = ref(loadedResults.loadedSpritePixels);
 // const loadedSpritePalette = ref(loadedResults.loadedSpritePalette);
 // const loadedSpriteAddresses = ref(loadedResults.loadedSpriteAddresses);
-const loadedSpritePixels = ref(null);
-const loadedSpritePalette = ref(null);
-const loadedSpriteAddresses = ref(null);
+
+// Initialize with the filler values
+const loadedSpritePixels = ref(loadedSprite.value.pixels);
+const loadedSpritePalette = ref([] as Color[]);
+const loadedSpriteAddresses = ref(loadedSprite.value.addresses);
 
 // console.log(loadedSpritePalette.value[7]);
 // console.log("mappy", Color.convertPaletteToMap(loadedSprite.value.palette));
@@ -111,11 +128,19 @@ function changeSprite(newSprite: Sprite) {
 	loadedSpritePixels.value = reloadedResults.loadedSpritePixels;
 	loadedSpritePalette.value = reloadedResults.loadedSpritePalette;
 	loadedSpriteAddresses.value = reloadedResults.loadedSpriteAddresses;
+	if (loadedSprite.value.scale) {
+		pixelScale.value = loadedSprite.value.scale;
+	} else {
+		pixelScale.value = DEFAULT_SCALE;
+	}
+		console.log(pixelScale.value);
 }
 
 function selectPixel(pixel: PaletteIndex) {
 	changeColor(pixel);
 }
+
+
 </script>
 
 <style scoped>
@@ -123,12 +148,13 @@ function selectPixel(pixel: PaletteIndex) {
 	border-collapse: collapse;
 	display: block;
 	float: right;
+	background-color: gray;
 }
 .pixel-row {
 	margin: 0px;
 }
 .pixel {
-	display: block;
+	display: flex;
 	float: left;
 	width: 15px;
 	height: 15px;
@@ -145,7 +171,7 @@ function selectPixel(pixel: PaletteIndex) {
 h2,
 h3,
 h4 {
-	margin-top: 4px; 
+	margin-top: 4px;
 	margin-bottom: 4px;
 }
 
