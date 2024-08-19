@@ -50,6 +50,48 @@ const zero_sprite = [
     [ ,2,2,2,2,2,2, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ]
 ] as SpritePixels;
 
+const zero_gem_sprite = [
+    [ , , , , , , , , , , , , , , , , , ,C, , , , ,B, , , , , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , , , ,B,C, , , ,B,B, , , , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , , , ,A,B,C, , ,A,B,B, , , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , , , ,A,A,D,C,2,2,A,B, , , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , , , ,2,A,B,D,C,3,2,A,B, , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , , ,2,3,2,A,C,9,B,3,2,B, , , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , , ,3,2,3,2,A,B,D,9,C,2,A,B, , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , , ,3,5,4,2,2,2,A,B,D,C,E,F,B, , , , , , , , , , , , , , , ],
+    [ , , , , , , , , , , , , , ,7,3,4,5,4,2,2,1,1,A,D,C,E,B, , , , , , , , , , , , , , , ],
+    [ , , , , ,B,B,B, , , , ,2,2,2,A,3,5,D,C,1,6,4,1,A,D,C,A, , , , , , , , , , , , , , , ],
+    [ , , , ,B,C,C,C,2,2,2,2,3,4,3,2,A,4,C,D,5,6,5,1,9,1, , , , , , , , , , , , , , , , , ],
+    [ , , , ,B,C,D,C,2,2,3,3,3,3,3,2,B,A,B,4,5,5,9,9,9,6, , , , , , , , , , , , , , , , , ],
+    [ , , ,B,C,C,D,C,2,2,2,2,2,2,2,C,D,C,A,1,3,4,9,A,6, , , , , , , , , , , , , , , , , , ],
+    [ , , ,B,C,D,D,C,B,2,2,2,A,A,B,7,8,D,C,B,A,1,6,6, , , , , , , , , , , , , , , , , , , ],
+    [ , , ,B,C,D,D,C,B,7,8,A,A,A,B,8,C,D,C,7,B,2,2, , , , , , ,2,3,3, , , , , , , , , , , ],
+    [ , ,A,7,8,8,8,7,A,8,8,A,B,B,B,B,B,C,C,7,B,3,2, , , , ,2,2,3,4,5,3, , , , , , , , , , ],
+    [ , ,A,6,2,2,2,6,A,8,7,A,A,B,C,C,C,B,B,A,2,2,3,2, , ,A,6,5,5,3,4,3, , , , , , , , , , ],
+    [ , ,2,2,3,3,3,2,7,8,6,6,2,2,2,A,B,C,C,B,2,2,2,3,2,A,7,7,3,4,2,5,5,2, , , , , , , , , ],
+    [ , ,2,3,3,3,3,3,2,7,6,2,4,3,2,2,2,2, , , ,2,2,2,A,B,7,7,2,3,2,3,4,2, , , , , , , , , ],
+    [ ,2,4,3,3,3,2,4,5,2,6,2,4,5,4,2,3,2, , , , ,2,A,B,B,6,7,2,2,4,5,2, , , , , , , , , , ],
+    [ ,2,4,5,3,5,3,2,4,2,6,2,3,3,5,3,4,3,2, , , ,A,A,B,B,B,6,6,2,3,2, , , , , , , , , , , ],
+    [ , ,2,4,3,4,3,7,2,6,2,2,3,3,3,4,4,2,3,2,2, ,A,A,A,A,A,A,1,2,2, , , , , , , , , , , , ],
+    [ , , ,2,2,4,2,7,7,6,2,3,3,3,2,4,3,2,2,3,3,2, ,A,A,A,A, , , , , ,2,2, , , , ,2,2, , , ],
+    [ , , , , ,2,6,7,7,2,2,3,3,2,2,1,1,2,2,2,3,3,2, , , , , , , , ,2,5,5,2,2,2,2,5,5,2, , ],
+    [ , , , , , ,6,B,A,2,3,4,3,2,2, , ,1,1,2,2,2,3,2,A, , , , ,2,2,2,4,4,5,5,5,3,4,4,2, , ],
+    [ , , , , , ,B,C,C,2,2,3,3,2, , , , , ,1,2,2,2,2,C,A, , ,2,4,4,3,4,4,4,4,4,4,4,4,2, , ],
+    [ , , , , , ,B,D,D,C,2,2,2,6, , , , , , ,1,2,B,C,B,A, , ,2,3,3,3,2,2,2,3,3,3,3,2,4,3, ],
+    [ , , , , ,B,C,D,D,D,C,A,2,6, , , , , , ,A,B,B,B,B,A, , ,2,3,3,2,4,5,5,2,3,3,3,2,3,2, ],
+    [ , , , ,A,B,D,D,D,C,C,A,7,6, , , , , , ,A,B,B,B,A, , , ,2,3,3,2,5,3,4,3,5,4,2,2,2, , ],
+    [ , , ,6,7,6,D,D,C,B,A, ,6,6,6, , , , , ,A,B,B,B,A, , , ,2,3,3,2,4,2,2,2,2,2,3,2, , , ],
+    [ , ,6,7,8,8,7,6,B,A, , , ,6,6, , , , , , ,A,B,B,A,A, , ,2,3,3,3,3,3,2,4,4,2,2, , , , ],
+    [ , ,B,6,7,7,8,8,A, , , , , , , , , , , ,A,A,B,6,6,7,A, , ,2,2,2,2,2,4,4,3,2,2, , , , ],
+    [ , ,A,B,C,6,7,7,A, , , , , , , , , , , ,A,6,7,7,7,6,A, , , , , , ,2,2,2,2, , , , , , ],
+    [ ,A,B,C,C,C,B,6,A, , , , , , , , , , , ,A,6,6,6,6,A,B,B,A, , , , , , , , , , , , , , ],
+    [A,B,C,D,D,D,B,A, , , , , , , , , , , ,3,4,A,A,B,B,C,C,C,B,A, , , , , , , , , , , , , ],
+    [A,B,C,D,9,D,B,A, , , , , , , , , , , ,3,3,3,B,B,B,B,C,C,C,A, , , , , , , , , , , , , ],
+    [2,B,C,C,C,C,B,2, , , , , , , , , , , ,2,3,3,A,A,3,3,4,4,3,2, , , , , , , , , , , , , ],
+    [2,3,4,4,4,4,3,2, , , , , , , , , , , , ,2,2,2,2,2,2,2,2,2,2, , , , , , , , , , , , , ],
+    [ ,2,2,2,2,2,2, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ]
+] as SpritePixels;
+
 const zero_rgb = {
     rgbList: [
         [64, 72, 64], // 1 dark gray/brown
@@ -2882,6 +2924,7 @@ zx_sprites.set('x_attacks', {
     pixels: x_attacks_sprite,
     palette: x_attacks_rgb,
     addresses: x_attacks_first_addresses,
+    scale: 9
 } as Sprite);
 zx_sprites.set('zx', {
     pixels: zx_sprite,
@@ -2897,7 +2940,7 @@ zx_sprites.set('zx_attacks', {
     pixels: zx_saber_sprite,
     palette: zx_saber_rgb,
     addresses: zx_saber_first_addresses,
-    scale: 10,
+    scale: 6,
 } as Sprite);
 zx_sprites.set('hx', {
     pixels: hx_sprite,
@@ -2913,11 +2956,13 @@ zx_sprites.set('hx_saber', {
     pixels: hx_saber_sprite,
     palette: hx_saber_rgb,
     addresses: hx_saber_first_addresses,
+    scale: 8
 } as Sprite);
 zx_sprites.set('hx_specials', {
     pixels: hx_jetpack_sprite,
     palette: hx_jetpack_rgb,
     addresses: hx_jetpack_first_addresses,
+    scale: 8
 } as Sprite);
 zx_sprites.set('fx', {
     pixels: fx_sprite,
@@ -2933,6 +2978,7 @@ zx_sprites.set('fx_attacks', {
     pixels: fx_attacks_sprite,
     palette: fx_attacks_rgb,
     addresses: fx_attacks_first_addresses,
+    scale: 8
 } as Sprite);
 zx_sprites.set('lx', {
     pixels: lx_sprite,
@@ -2948,11 +2994,13 @@ zx_sprites.set('lx_staff', {
     pixels: lx_staff_sprite,
     palette: lx_staff_rgb,
     addresses: lx_staff_first_addresses,
+    scale: 6
 } as Sprite);
 zx_sprites.set('lx_specials', {
     pixels: lx_specials_sprite,
     palette: lx_specials_rgb,
     addresses: lx_specials_addresses,
+    scale: 7
 } as Sprite);
 zx_sprites.set('px', {
     pixels: px_sprite,
@@ -2968,6 +3016,7 @@ zx_sprites.set('px_attacks', {
     pixels: kunai_sprite,
     palette: kunai_rgb,
     addresses: kunai_addresses,
+    scale: 10
 } as Sprite);
 zx_sprites.set('px_shield', {
     pixels: px_shield_sprite,
@@ -2988,11 +3037,13 @@ zx_sprites.set('ox_attacks1', {
     pixels: ox_saber_sprite,
     palette: ox_saber_rgb,
     addresses: ox_saber_first_addresses,
+    scale: 7
 } as Sprite);
 zx_sprites.set('ox_attacks2', {
     pixels: ox_specials_sprite,
     palette: ox_specials_rgb,
     addresses: ox_specials_first_addresses,
+    scale: 6
 } as Sprite);
 
 

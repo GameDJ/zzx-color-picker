@@ -22,7 +22,8 @@ export type ColorData = {
  * @param depth bit color depth; generally either 24 for rgb/hex formats or 15 for gba
  */
 export class Color {
-  private _colorData: ColorData;
+  /** this is supposed to be private but js/typescript sucks */
+  _colorData: ColorData;
 
   // might change this to take a single ColorData object, but this should be ok for now
   constructor(
@@ -40,11 +41,17 @@ export class Color {
   // Static methods
 
   /** @returns comma-separated rgb values */
-  static rgbString(color: Color): string {
+  static rgbString(color: Color, includeWrap = false): string {
     let retVal = "";
+    if (includeWrap) {
+      retVal += "rgb(";
+    }
     for (let i = 0; i < color.rgb.length; i++) {
       retVal += Color.channelToNBitDepth(color.rgb[i], color.depth / 3);
       if (i < color.rgb.length - 1) retVal += ",";
+    }
+    if (includeWrap) {
+      retVal += ")";
     }
     return retVal;
   }
@@ -128,6 +135,11 @@ export class Color {
     return retVal;
   }
 
+  /**
+   * Prepares a stored palette for use in the editor
+   * @param palette 
+   * @returns Color[] with an added leading Color to fill in for the sprite's transparency
+   */
   static convertPaletteToColorPalette(palette: Palette): Color[] {
     const newColorPalette = [] as Color[];
     // 0th index will be a filler background color which is ignored
@@ -142,6 +154,7 @@ export class Color {
     return newColorPalette;
   }
 
+  /** unused? */
   static convertPaletteToMap(palette: Palette) {
     const paletteMap = new Map();
     // for (const curRGB of palette.rgbList) {

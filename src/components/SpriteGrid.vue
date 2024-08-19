@@ -6,7 +6,7 @@
 		<button @click="changeSprite(sprites.zero234)">zero234</button>
 		<button @click="changeSprite(sprites.zero234_dash)">zero234_dash</button>
 		<button @click="changeSprite(sprites.vent)">Vent</button> -->
-		<div class="tree-container">
+		<!-- <div class="tree-container">
 			<div v-for="seriesKey in seriesList.keys()" :key="seriesKey">
 				<h2 class="tree">{{ seriesKey }}</h2>
 				<div
@@ -38,11 +38,11 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<table class="sprite-table" v-if="loadedSprite">
+		</div> -->
+		<table class="sprite-table" v-if="loadedPixels">
 			<tr
 				class="pixel-row"
-				v-for="(pixel_row, rowNum) in loadedSpritePixels"
+				v-for="(pixel_row, rowNum) in loadedPixels"
 				:key="rowNum"
 			>
 				<td
@@ -51,7 +51,7 @@
 					:key="colNum"
 					:style="{
 						backgroundColor: pixel
-							? Color.hexString(loadedSpritePalette[pixel] as Color, true)
+							? Color.hexString(loadedPalette[pixel] as Color, true)
 							: '#0000',
 						visibility: pixel ? 'visible' : 'hidden',
 						width: pixelScale + 'px',
@@ -73,68 +73,91 @@ import {
 	Addresses,
 } from "@/types/spriteTypes";
 import { Color, RGB } from "@/types/colorTypes";
-import { ref, toRefs } from "vue";
+import { ref, watch, computed } from "vue";
 // import { sprites } from "@/assets/sprites";
 import { series } from "@/assets/sprites";
+// import store from "@/store";
+import store from "@/store/store";
 
-const DEFAULT_SCALE = 15;
-const pixelScale = ref(DEFAULT_SCALE);
+// const DEFAULT_SCALE = 15;
+// const pixelScale = ref(DEFAULT_SCALE);
 
 const seriesList = series;
 console.log(seriesList.keys());
 
 // Initialize with empty filler values
-const loadedSprite = ref({
-	pixels: [][0] as PaletteIndex[][],
-	palette: {
-		rgbList: [][0],
-		depth: 0,
-	} as Palette,
-	addresses: {
-		addr: [],
-	} as Addresses,
-} as Sprite);
-function loadSpriteData() {
-	return {
-		loadedSpritePixels: loadedSprite.value.pixels,
-		loadedSpritePalette: Color.convertPaletteToColorPalette(
-			loadedSprite.value.palette
-		),
-		loadedSpriteAddresses: loadedSprite.value.addresses,
-	};
-}
+// const loadedSprite = ref({
+// 	pixels: [][0] as PaletteIndex[][],
+// 	palette: {
+// 		rgbList: [][0],
+// 		depth: 0,
+// 	} as Palette,
+// 	addresses: {
+// 		addr: [],
+// 	} as Addresses,
+// } as Sprite);
+
+// const loadedSprite = ref(store.getters["currentSprite"]);
+// const loadedPalette = ref(store.getters["currentColorPalette"]);
+const loadedPixels = computed(() => store.pixels());
+const loadedPalette = computed(() => store.palette());
+const pixelScale = computed(() => store.scale());
+
+// watch(store.getters["currentSprite"], () =>
+// 	console.log("well poop my pants and call me a fiddle")
+// )
+
+// function loadSpriteData() {
+// 	return {
+// 		loadedSpritePixels: loadedSprite.value.pixels,
+// 		loadedSpritePalette: Color.convertPaletteToColorPalette(
+// 			loadedSprite.value.palette
+// 		),
+// 		loadedSpriteAddresses: loadedSprite.value.addresses,
+// 	};
+// }
 // const loadedResults = loadSpriteData();
 // const loadedSpritePixels = ref(loadedResults.loadedSpritePixels);
 // const loadedSpritePalette = ref(loadedResults.loadedSpritePalette);
 // const loadedSpriteAddresses = ref(loadedResults.loadedSpriteAddresses);
 
 // Initialize with the filler values
-const loadedSpritePixels = ref(loadedSprite.value.pixels);
-const loadedSpritePalette = ref([] as Color[]);
-const loadedSpriteAddresses = ref(loadedSprite.value.addresses);
+// const loadedSpritePixels = ref(loadedSprite.value.pixels);
+// const loadedSpritePalette = ref([] as Color[]);
+// const loadedSpriteAddresses = ref(loadedSprite.value.addresses);
 
 // console.log(loadedSpritePalette.value[7]);
 // console.log("mappy", Color.convertPaletteToMap(loadedSprite.value.palette));
 
 function changeColor(pixel: PaletteIndex = 1) {
-	console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
-	loadedSpritePalette.value[pixel].rgb = [255, 0, 255] as RGB;
-	console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
+	// console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
+	// loadedSpritePalette.value[pixel].rgb = [255, 0, 255] as RGB;
+	// console.log("loaded palette pixel", loadedSpritePalette.value, pixel);
+
+	// store.dispatch("changePaletteColor", {
+	// 	index: pixel,
+	// 	color: new Color([255, 0, 255] as RGB)
+	// });
+
+	store.changePaletteColor({
+		index: pixel,
+		color: new Color([255, 0, 255] as RGB)
+	})
 }
 
-function changeSprite(newSprite: Sprite) {
-	loadedSprite.value = newSprite;
-	const reloadedResults = loadSpriteData();
-	loadedSpritePixels.value = reloadedResults.loadedSpritePixels;
-	loadedSpritePalette.value = reloadedResults.loadedSpritePalette;
-	loadedSpriteAddresses.value = reloadedResults.loadedSpriteAddresses;
-	if (loadedSprite.value.scale) {
-		pixelScale.value = loadedSprite.value.scale;
-	} else {
-		pixelScale.value = DEFAULT_SCALE;
-	}
-		console.log(pixelScale.value);
-}
+// function changeSprite(newSprite: Sprite) {
+// 	loadedSprite.value = newSprite;
+// 	const reloadedResults = loadSpriteData();
+// 	loadedSpritePixels.value = reloadedResults.loadedSpritePixels;
+// 	loadedSpritePalette.value = reloadedResults.loadedSpritePalette;
+// 	loadedSpriteAddresses.value = reloadedResults.loadedSpriteAddresses;
+// 	if (loadedSprite.value.scale) {
+// 		pixelScale.value = loadedSprite.value.scale;
+// 	} else {
+// 		pixelScale.value = DEFAULT_SCALE;
+// 	}
+// 		console.log(pixelScale.value);
+// }
 
 function selectPixel(pixel: PaletteIndex) {
 	changeColor(pixel);
@@ -147,7 +170,7 @@ function selectPixel(pixel: PaletteIndex) {
 .sprite-table {
 	border-collapse: collapse;
 	display: block;
-	float: right;
+	float: left;
 	background-color: gray;
 }
 .pixel-row {

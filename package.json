@@ -40,7 +40,9 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "no-sparse-arrays": 0
+    }
   },
   "browserslist": [
     "> 1%",

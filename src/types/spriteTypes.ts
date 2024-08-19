@@ -27,5 +27,8 @@ export interface Sprite {
     scale?: number,
 }
 
+export type LoadedSprite = Sprite | null;
+export type LoadedColorPalette = Color[] | null;
+
 // use this regex to find empty commas:
 // (?<![\d\w\]]),
